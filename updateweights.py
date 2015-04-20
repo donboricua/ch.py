@@ -4,7 +4,7 @@ import zlib, json, re
 class updater:
 
   def findid(self):
-    url = urllib.request.urlopen("http://st.chatango.com/cfg/nc/r.json")
+    url = urllib.request.urlopen("http://st.chatango.com/cfg/nc/r.json").read().decode()
     id = json.loads(url)['r']
     return id
 
