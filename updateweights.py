@@ -1,24 +1,17 @@
-import urllib.request
-import zlib, json, re
+import json, re, requests
 
 class updater:
 
   def findid(self):
-    url = urllib.request.urlopen("http://st.chatango.com/cfg/nc/r.json").read().decode()
-    id = json.loads(url)['r']
+    url = requests.get("http://st.chatango.com/cfg/nc/r.json")
+    id = url.json()['r']
     return id
 
   def findweights(self):
-    url = urllib.request.urlopen("http://st.chatango.com/h5/gz/r%s/id.html"%self.ID)
+    url = requests.get("http://st.chatango.com/h5/gz/r%s/id.html"%self.ID).text.splitlines()
     print("Found server weights.")
-    if url.getheader('Content-Encoding')=="gzip":
-      print("Server weights encoded with gzip, decoding...")
-      data = zlib.decompress(url.read(),47)
-    else:
-      data=url.read()
     print("Processing server weights...")
-    data = data.decode("utf-8","ignore").splitlines()
-    tags = json.loads(data[7].split(" = ")[-1])
+    tags = json.loads(url[7].split(" = ")[-1])
     weights = []
     for a,b in tags["sm"]:
       c = tags["sw"][b]
@@ -35,12 +28,11 @@ class updater:
       ch.truncate()
 
   def run(self):
-    print("Searching for latest server weights list...")
+    print("Searching for latest server weights ID...")
+    print("Server weight ID found.")
     self.ID = self.findid()
-    print("Server weight ID found!")
     print("ID: r"+self.ID)
     self.weights = self.findweights()
-    #print(self.weights)
     self.updatech()
     print("The server weights are now updated for ch.py, enjoy!")
 
