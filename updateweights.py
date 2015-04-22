@@ -29,8 +29,8 @@ class updater:
 
   def run(self):
     print("Searching for latest server weights ID...")
-    print("Server weight ID found.")
     self.ID = self.findid()
+    print("Server weight ID found.")
     print("ID: r"+self.ID)
     self.weights = self.findweights()
     self.updatech()
